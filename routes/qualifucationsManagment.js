@@ -1,62 +1,61 @@
 const router = require("express").Router();
-const db = require ("../Database/DatabseConn");
 
+const {
+  createQualification,
+  getAllQualifications,
+  getOneQualification,
+  updateQualification,
+  deleteQualification,
+} = require("../services/qualificationServices");
+const {
+  createQualificationValidator,
+  getOneQualificationValidator,
+  updateQualificationValidator,
+  deleteQualificationValidator,
+} = require("../utils/validators/qualificationValidator");
 
 // Save New Qualification
-router.post("/api/post-qualifications",(req,res) => {
-    const{description} = req.body;
-    const sqlInsert = "INSERT INTO `qualification` (`description`) VALUES (?)";
-    db.query(sqlInsert, [description], (error, result)=>{
-        if(error){
-            console.log(error);
-        }
-        else{
-            res.send("Qualification Added Succesfully")
-        }
-    });
-});
+router.post(
+  "/api/post-qualifications",
+  authServices.allowTo(1),
+  updateApplicantValidator,
+  createQualificationValidator,
+  createQualification
+);
 
 //Select All From Qulaifications
-router.get("/api/get-qualifications", (req, res) => {
-    const sqlGet = "SELECT * FROM qualification";
-    db.query(sqlGet, (error, result)=>{
-        res.send(result);
-    });
-}); 
+router.get(
+  "/api/get-qualifications",
+  authServices.allowTo(1),
+  updateApplicantValidator,
+  getAllQualifications
+);
 
 // Select Spacific Qualification
-router.get("/api/get-qualification/:id", (req, res) => {
-    const{ id } = req.params;
-    const sqlGet = "SELECT * FROM qualification WHERE id=?";
-    db.query(sqlGet, id , (error, result)=>{
-        res.send(result);
-    });
-});
+router.get(
+  "/api/get-qualification/:id",
+  authServices.allowTo(1),
+  updateApplicantValidator,
+  getOneQualificationValidator,
+  getOneQualification
+);
 
 // Update Qualification
-router.put("/api/update-qualification/:id", (req, res) => {
-    const{ id } = req.params;
-    const{description} = req.body;
-    const sqlUpdata = "UPDATE qualification SET description=? WHERE id=? ";
-    db.query(sqlUpdata, [description, id] , (error, result)=>{
-        res.send("Qualification Updated Succesfully");
-    });
-});
+router.put(
+  "/api/update-qualification/:id",
+  authServices.allowTo(1),
+  updateApplicantValidator,
+  updateQualificationValidator,
+  updateQualification
+);
 
 // Delete Qualification
-router.delete("/api/remove-qualification/:id",(req,res) => {
-    const{ id } = req.params;
-    const sqlRemove = "DELETE FROM `qualification` WHERE id=? ";
-    db.query(sqlRemove, [ id ], (error, result)=>{
-        if(error){
-            console.log(error);
-        }
-        else{
-        res.send("Qualification Deleted Succesfully");
-
-        }
-    });
-});
-
+router.delete(
+  "/api/remove-qualification/:id",
+  authServices.allowTo(1),
+  updateApplicantValidator,
+  deleteQualificationValidator,
+  deleteQualification
+);
 
 module.exports = router;
