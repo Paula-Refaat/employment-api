@@ -14,11 +14,13 @@ const {
   deleteQualificationValidator,
 } = require("../utils/validators/qualificationValidator");
 
+const authServices = require("../services/authServices");
+
 // Save New Qualification
 router.post(
   "/api/post-qualifications",
+  authServices.protect,
   authServices.allowTo(1),
-  updateApplicantValidator,
   createQualificationValidator,
   createQualification
 );
@@ -26,16 +28,16 @@ router.post(
 //Select All From Qulaifications
 router.get(
   "/api/get-qualifications",
+  authServices.protect,
   authServices.allowTo(1),
-  updateApplicantValidator,
   getAllQualifications
 );
 
 // Select Spacific Qualification
 router.get(
   "/api/get-qualification/:id",
+  authServices.protect,
   authServices.allowTo(1),
-  updateApplicantValidator,
   getOneQualificationValidator,
   getOneQualification
 );
@@ -43,8 +45,8 @@ router.get(
 // Update Qualification
 router.put(
   "/api/update-qualification/:id",
+  authServices.protect,
   authServices.allowTo(1),
-  updateApplicantValidator,
   updateQualificationValidator,
   updateQualification
 );
@@ -52,8 +54,8 @@ router.put(
 // Delete Qualification
 router.delete(
   "/api/remove-qualification/:id",
+  authServices.protect,
   authServices.allowTo(1),
-  updateApplicantValidator,
   deleteQualificationValidator,
   deleteQualification
 );
